@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const departement = require('./departement');
 
 const userSchema = mongoose.Schema({
 
@@ -22,6 +23,11 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    departement_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Departement',
+        required: false
     }
 
 })

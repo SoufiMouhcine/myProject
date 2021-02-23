@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const User = require('../model/User');
 const bcrypt = require('bcrypt');
+const departement = require('../model/departement');
 
 /* signup. */
 router.post('/signup', (req, res, next) => {
@@ -20,7 +21,8 @@ router.post('/signup', (req, res, next) => {
                             firstName: req.body.firstName,
                             lastName: req.body.lastName,
                             email: req.body.email,
-                            password: hash
+                            password: hash,
+                            departement_id: req.body.departement_id
                         });
                         user.save()
                             .then(result => {
