@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const departement = require('./departement');
+
 
 const userSchema = mongoose.Schema({
 
@@ -26,7 +26,7 @@ const userSchema = mongoose.Schema({
     },
     departement_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Departement',
+        ref: 'departement',
         required: false
     }
 

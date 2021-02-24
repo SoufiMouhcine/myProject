@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 const User = require('../model/User');
 const bcrypt = require('bcrypt');
-const departement = require('../model/departement');
+const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
 
 /* signup. */
 router.post('/signup', (req, res, next) => {
@@ -54,15 +55,21 @@ router.post('/signup', (req, res, next) => {
 });
 
 router.get('/signin', (req, res, next) => {
-    User.find({ email: req.body.email })
+    User.findOne({ email: req.body.email })
         .then(user => {
-            if (user.length >= 1) {
-                bcrypt.compare(req.body.password, user[0].password)
+            console.log(user);
+            if (user) {
+                //const usersa=JSON.parse(JSON.stringify(Object.assign({}, user)));
+                //console.log(usersa);
+                bcrypt.compare(req.body.password, user.password)
                     .then(result => {
                         if (result) {
                             res.status(200).json({
-                                message: 'you are sign in'
-                            })
+                                userId: user._id,
+                                token: jwt.sign({ userId: user._id },
+                                    'RANDOM_TOKEN_SECRET', { expiresIn: '4h' }
+                                )
+                            });
                         } else {
                             res.status(404).json({
                                 message: 'wrong passwrod'
@@ -88,7 +95,7 @@ router.get('/signin', (req, res, next) => {
         })
 });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', auth, (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = {
@@ -120,7 +127,7 @@ router.put('/:id', (req, res, next) => {
         })
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', auth, (req, res, next) => {
     User.findOneAndDelete({ _id: req.params.id })
         .then(result => {
             if (result) {
@@ -140,8 +147,8 @@ router.delete('/:id', (req, res, next) => {
         })
 });
 
-router.get('/', (req, res, next) => {
-    const user = User.find({}, 'firstName lastName email')
+router.get('/', auth, (req, res, next) => {
+    const user = User.find({}, 'firstName lastName email').populate('departement_id', 'name')
         .then(result => {
             res.status(200).json({
                 users: result
@@ -152,5 +159,34 @@ router.get('/', (req, res, next) => {
                 message: err
             })
         })
-})
+});
+
+router.get('/', auth, (req, res, next) => {
+    const user = User.find({}, 'firstName lastName email').populate('departement_id', 'name')
+        .then(result => {
+            res.status(200).json({
+                users: result
+            })
+        })
+        .catch(err => {
+            res.status(404).json({
+                message: err
+            })
+        })
+});
+
+router.get('/:id', auth, (req, res, next) => {
+    const user = User.findById({ _id: req.params.id }, 'firstName lastName email').populate('departement_id', 'name')
+        .then(result => {
+            res.status(200).json({
+                user: result
+            })
+        })
+        .catch(err => {
+            res.status(404).json({
+                message: err
+            })
+        })
+});
+
 module.exports = router;

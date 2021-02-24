@@ -4,15 +4,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
+const auth = require('./middleware/auth');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var departementRouter = require('./routes/departements');
+
 
 var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,6 +29,8 @@ mongoose.connect('mongodb://localhost/myProject', { useNewUrlParser: true, useUn
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/departements', auth, departementRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
