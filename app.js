@@ -3,10 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const mongoose = require('mongoose');
+const connectdb = require('./config/db');
 const auth = require('./middleware/auth');
-
-var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var departementRouter = require('./routes/departements');
 
@@ -18,16 +16,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-mongoose.connect('mongodb://localhost/myProject', { useNewUrlParser: true, useUnifiedTopology: true }, (err, result) => {
-    if (err) {
-        console.log(err)
-        return
-    } else {
-        console.log("connect to DB")
-    }
-});
 
-app.use('/', indexRouter);
+connectdb;
+
 app.use('/users', usersRouter);
 app.use('/departements', auth, departementRouter);
 

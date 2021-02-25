@@ -9,8 +9,9 @@ const departementSchema = mongoose.Schema({
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-    }
-
+    },
+}, {
+    timestamps: true
 })
 
 module.exports = mongoose.model('departement', departementSchema);

@@ -15,6 +15,7 @@ const userSchema = mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true,
         validate: {
             validator: validator.isEmail,
             message: '{VALUE} is not a valid email',
@@ -29,7 +30,8 @@ const userSchema = mongoose.Schema({
         ref: 'departement',
         required: false
     }
-
+}, {
+    timestamps: true
 })
 
 module.exports = mongoose.model('User', userSchema);
