@@ -10,7 +10,7 @@ const signup = (req, res) => {
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
                     if (err) {
                         res.status(404).json({
-                            message: err
+                            error: err
                         })
                     } else {
                         const user = new User({
@@ -23,12 +23,12 @@ const signup = (req, res) => {
                         user.save()
                             .then(result => {
                                 res.status(201).json({
-                                    message: result
+                                    data: result
                                 })
                             })
                             .catch(err => {
                                 res.status(404).json({
-                                    message: err
+                                    error: err
                                 })
                             })
                     }
@@ -43,7 +43,7 @@ const signup = (req, res) => {
         })
         .catch(err => {
             res.status(404).json({
-                message: err
+                error: err
             })
         })
 };
@@ -71,7 +71,7 @@ const signin = (req, res) => {
                     })
                     .catch(err => {
                         res.status(404).json({
-                            message: err
+                            error: err
                         })
                     })
 
@@ -83,7 +83,7 @@ const signin = (req, res) => {
         })
         .catch(err => {
             res.status(404).json({
-                message: err
+                error: err
             })
         })
 }
@@ -105,7 +105,7 @@ const addUser = (req, res) => {
             user.save()
                 .then(result => {
                     res.status(201).json({
-                        user: result
+                        data: result
                     });
                 })
                 .catch(err => {
@@ -122,12 +122,12 @@ const getUsers = (req, res) => {
     const user = User.find({}, 'firstName lastName email').populate('departement_id', 'name')
         .then(result => {
             res.status(200).json({
-                users: result
+                data: result
             })
         })
         .catch(err => {
             res.status(404).json({
-                message: err
+                error: err
             })
         })
 };
@@ -136,12 +136,12 @@ const getUserById = (req, res) => {
     const user = User.findById({ _id: req.params.id }, 'firstName lastName email').populate('departement_id', 'name')
         .then(result => {
             res.status(200).json({
-                user: result
+                data: result
             })
         })
         .catch(err => {
             res.status(404).json({
-                message: err
+                error: err
             })
         })
 };
@@ -170,13 +170,13 @@ const updateUser = (req, res) => {
                 })
                 .catch(err => {
                     res.status(404).json({
-                        message: err
+                        error: err
                     })
                 })
         })
         .catch(err => {
             res.status(404).json({
-                message: err
+                error: err
             })
         })
 };
@@ -196,7 +196,7 @@ const deleteUser = (req, res) => {
         })
         .catch(err => {
             res.status(404).json({
-                message: err
+                error: err
             })
         })
 
