@@ -58,7 +58,7 @@ const signin = (req, res) => {
                     .then(result => {
                         if (result) {
                             res.status(200).json({
-                                userId: user._id,
+                                user: user,
                                 token: jwt.sign({ userId: user._id },
                                     'RANDOM_TOKEN_SECRET', { expiresIn: '4h' }
                                 )
