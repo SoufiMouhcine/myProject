@@ -23,11 +23,11 @@ const updateDepartement = (req, res) => {
     const dep = {
         name: req.body.name
     }
-    departement.findOneAndUpdate({ _id: req.params.id }, { $set: dep })
+    departement.findOneAndUpdate({ _id: req.params.id }, { $set: dep }, { new: true })
         .then(result => {
             if (result) {
                 res.status(200).json({
-                    message: 'departement updated'
+                    message: result
                 })
             } else {
                 res.status(404).json({
